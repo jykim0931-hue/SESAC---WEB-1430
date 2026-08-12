@@ -9,7 +9,6 @@
 |---|---|
 | [`index.html`](index.html) | 대시보드 본체 — 요약 4장 + 차트 3종 + 탐색 도구 2종 |
 | [`schema.html`](schema.html) | 구조 설명서 — 어떤 자료가 어떻게 화면이 되는지 그림으로 |
-| [`about.html`](about.html) | 자기소개 페이지 |
 | [`PRD.md`](PRD.md) | 기획 문서 — 페르소나, 지표 정의, 완료 기준 |
 
 ---
@@ -162,25 +161,27 @@
 
 ## 7. 파일 안내
 
+모두 이 폴더(`부동산-실습/`) 안에 있습니다.
+
 | 경로 | 내용 |
 |---|---|
 | `index.html` | 대시보드 |
 | `schema.html` | 구조 설명서 |
-| `about.html` | 자기소개 |
 | `PRD.md` | 기획 문서 |
 | `assets/` | 화면 디자인과 동작 |
 | `build/` | 요약 계산 · 검증 스크립트 |
 | `data/` | 계산된 요약 파일 (227KB) |
 | `seoul-apt-latest.csv` | 원본 데이터 (27.5MB) |
+| `analyze.py` | 수업에서 쓴 최초 분석 스크립트 (기록용, 현재 데이터로는 동작하지 않음) |
 
-직접 실행해 보려면 — 요약을 다시 계산할 때만 필요합니다.
+요약을 다시 계산하려면 — 원본 데이터가 바뀔 때만 필요합니다.
 
 ```bash
-node build/aggregate.js
+cd 부동산-실습 && node build/aggregate.js
 ```
 
 계산 결과가 맞는지 확인하려면 (30개 항목 검사).
 
 ```bash
-node build/verify.js
+cd 부동산-실습 && node build/verify.js
 ```

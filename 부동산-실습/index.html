@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>서울 아파트 매매 시장 대시보드</title>
+<meta name="description" content="서울 25개 구·316개 동의 2025-07~2026-06 아파트 매매 실거래 72,459건을 분석한 대시보드">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body>
+
+  <!-- S0 · 헤더 -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="flex-between">
+        <span class="chip label1">SEOUL APARTMENT MARKET</span>
+        <a class="body1 header-link" href="../index.html">← 실습 목록</a>
+      </div>
+      <h1 class="display2">서울 아파트 매매 시장 대시보드</h1>
+      <p class="body1" style="color: var(--color-label-neutral); max-width: 720px;">
+        서울 25개 구·316개 동의 최근 12개월 아파트 매매 실거래를 분석해,
+        어디가 올랐고 내 예산으로 어디에 갈 수 있으며 진입장벽은 어떻게 이중으로 작동하는지 살펴봅니다.
+      </p>
+      <div class="header-meta caption1">
+        <span>데이터 기간 <b>2025-07 ~ 2026-06</b></span>
+        <span>총 매매 <b id="header-total">—</b></span>
+        <span>출처 <b>서울 아파트 실거래가 (매매)</b></span>
+        <span>집계일 <b id="header-generated">—</b></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- S1 · KPI -->
+    <section id="s1" aria-labelledby="s1-title">
+      <h2 id="s1-title" class="sr-only">핵심 지표</h2>
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="loading-state">불러오는 중…</div>
+      </div>
+    </section>
+
+    <!-- S2 · 헤드라인 -->
+    <section id="s2" class="card" aria-labelledby="s2-title">
+      <div class="section-head">
+        <span class="eyebrow label1">HEADLINE</span>
+        <h2 id="s2-title" class="headline">서울 아파트 시장은 2026년 상반기 <span class="accent">양극화</span>됐다</h2>
+        <p class="desc body1">구별 반기 중위 평당가 변화율 (H1 2025-07~12 → H2 2026-01~06), 25개 구 전부 산출. 변화율 내림차순, 0% 기준 좌우 발산.</p>
+      </div>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:var(--color-rise-normal)"></span>상승</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:var(--color-fall-normal)"></span>하락</span>
+      </div>
+      <div class="chart-wrap" id="s2-chart-wrap">
+        <div class="loading-state">불러오는 중…</div>
+      </div>
+    </section>
+
+    <!-- S3 · 월별 추이 콤보 차트 -->
+    <section id="s3" class="card" aria-labelledby="s3-title">
+      <div class="section-head">
+        <span class="eyebrow label1">MONTHLY TREND</span>
+        <h2 id="s3-title" class="heading1">월별 거래량 · 평당가 추이</h2>
+        <p class="desc body1">막대는 거래 건수, 선은 중위 평당가입니다. 구를 선택하면 해당 구 기준으로 갱신됩니다.</p>
+      </div>
+      <div class="filter-row">
+        <div class="filter-field">
+          <label for="s3-gu-select">지역</label>
+          <select id="s3-gu-select"></select>
+        </div>
+      </div>
+      <div class="chart-wrap" id="s3-chart-wrap">
+        <div class="loading-state">불러오는 중…</div>
+      </div>
+    </section>
+
+    <!-- S4 · 랭킹 -->
+    <section id="s4" class="card" aria-labelledby="s4-title">
+      <div class="section-head">
+        <span class="eyebrow label1">RANKING</span>
+        <h2 id="s4-title" class="heading1">상승 · 하락 지역 랭킹</h2>
+        <p class="desc body1">반기 변화율 기준. 표본 15건 미만(반기 각각) 동은 값을 산출할 수 없어 제외했습니다. (211/316개 동 산출)</p>
+      </div>
+      <div class="rank-grid">
+        <div class="rank-col">
+          <h3 class="label1" style="color:var(--color-rise-strong)">상승 TOP 10</h3>
+          <ul class="rank-list" id="rank-rising"></ul>
+        </div>
+        <div class="rank-col">
+          <h3 class="label1" style="color:var(--color-fall-strong)">하락 BOTTOM 10</h3>
+          <ul class="rank-list" id="rank-falling"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- S5 · 예산 탐색기 -->
+    <section id="s5" class="card" aria-labelledby="s5-title">
+      <div class="section-head">
+        <span class="eyebrow label1">BUDGET EXPLORER</span>
+        <h2 id="s5-title" class="heading1">예산 탐색기</h2>
+        <p class="desc body1">예산과 면적대를 정하면 진입 가능성(예산 이내 거래 비중) 상위 동을 보여줍니다. 표본 10건 미만 동은 <span class="cell-null">—</span> 표시됩니다. 예산은 5,000만원 단위로 선택되며, 해당 지점의 진입 가능성은 근사치가 아닌 정확한 값입니다.</p>
+      </div>
+      <div class="filter-row">
+        <div class="filter-field">
+          <label for="budget-range">예산 (3억 ~ 50억)</label>
+          <input type="range" id="budget-range" min="30000" max="500000" step="5000" value="100000">
+        </div>
+        <div class="filter-field">
+          <label for="budget-number">직접 입력(억)</label>
+          <input type="number" id="budget-number" min="3" max="50" step="0.5" value="10.0" style="width:88px">
+        </div>
+        <div class="filter-field">
+          <span class="budget-readout" id="budget-readout">10.0억</span>
+        </div>
+        <div class="filter-field">
+          <label for="budget-area">면적대</label>
+          <select id="budget-area">
+            <option value="전체">전체</option>
+            <option value="소형">소형 (&lt;60㎡)</option>
+            <option value="중소형">중소형 (60~85㎡)</option>
+            <option value="중형">중형 (85~102㎡)</option>
+            <option value="대형">대형 (&ge;102㎡)</option>
+          </select>
+        </div>
+      </div>
+      <p class="small-note" id="budget-summary" style="margin-bottom:12px"></p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>동</th>
+              <th class="num">중위가</th>
+              <th>진입 가능성</th>
+              <th class="num">거래 건수(면적대)</th>
+              <th class="num">반기 변화율</th>
+            </tr>
+          </thead>
+          <tbody id="budget-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S6 · 구 -> 동 드릴다운 -->
+    <section id="s6" class="card" aria-labelledby="s6-title">
+      <div class="section-head">
+        <span class="eyebrow label1">DRILLDOWN</span>
+        <h2 id="s6-title" class="heading1">구 → 동 드릴다운</h2>
+        <p class="desc body1" id="drilldown-caption">구를 선택하고 컬럼을 클릭해 정렬하세요. 값이 없는 셀은 <span class="cell-null">—</span>로 표시됩니다.</p>
+      </div>
+      <div class="filter-row">
+        <div class="filter-field">
+          <label for="drilldown-gu">구</label>
+          <select id="drilldown-gu"></select>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr id="drilldown-thead-row"></tr>
+          </thead>
+          <tbody id="drilldown-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S7 · 전세가율 갭 분석 -->
+    <section id="s7" class="card" aria-labelledby="s7-title">
+      <div class="section-head">
+        <span class="eyebrow label1">JEONSE GAP</span>
+        <h2 id="s7-title" class="heading1">전세가율(갭) 분석</h2>
+        <p class="desc body1">X축 = 중위 평당가, Y축 = 전세가율, 점 = 동. 비싼 곳일수록 전세가율이 낮아 매매가도 높은 데다 갭까지 커집니다.</p>
+        <p class="body1" style="font-weight:700" id="s7-stat-r"></p>
+        <p class="small-note" id="s7-stat-r2"></p>
+      </div>
+      <div class="chart-wrap" id="s7-chart-wrap">
+        <div class="loading-state">불러오는 중…</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- S8 · 푸터 -->
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <h2 class="heading1">데이터 한계</h2>
+      <ul class="caveat-list body1">
+        <li>실거래 신고 기한은 계약 후 30일입니다. 최근 1~2개월 거래 건수는 추후 신고분이 반영되며 증가할 수 있습니다.</li>
+        <li>전세가율은 동일 단지·동일 면적대로 매칭한 그룹의 중앙값을 다시 동 단위로 중앙값을 낸 값이며, 매칭 표본이 없는 동은 제외됩니다.</li>
+        <li>반기 변화율은 거래 구성(면적·단지 믹스)의 변화에도 영향을 받으며, 동일 매물의 가격 변동을 의미하지 않습니다.</li>
+      </ul>
+      <p class="caption1">서울 아파트 매매 실거래 데이터 (2025-07~2026-06) · 매매 72,459건 / 전세 129,649건(전세가율 계산용) 기반 · 월세 데이터는 미사용</p>
+    </div>
+  </footer>
+
+  <div id="viz-tooltip" role="status" aria-live="polite"></div>
+
+  <script type="module" src="assets/dashboard.js"></script>
+</body>
+</html>

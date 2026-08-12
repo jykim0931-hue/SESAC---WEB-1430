@@ -724,12 +724,22 @@ function onGuPick(guName) {
    boot
    ================================================================ */
 
+// 데이터 경로는 페이지 URL이 아니라 이 스크립트(assets/dashboard.js)의 위치를 기준으로 잡는다.
+// 페이지 URL 기준으로 하면 끝 슬래시 유무(/부동산-실습 vs /부동산-실습/)에 따라
+// 상대경로가 다른 곳으로 풀려 데이터가 통째로 404 나면서도 화면엔 빈 차트만 남는다.
+const DATA_BASE = new URL('../data/', import.meta.url);
+const loadJSON = (name) =>
+  fetch(new URL(name, DATA_BASE)).then((r) => {
+    if (!r.ok) throw new Error(`${name} 불러오기 실패 (${r.status})`);
+    return r.json();
+  });
+
 async function main() {
   const [summary, guList, dongList, meta] = await Promise.all([
-    fetch('data/summary.json').then((r) => r.json()),
-    fetch('data/gu.json').then((r) => r.json()),
-    fetch('data/dong.json').then((r) => r.json()),
-    fetch('data/meta.json').then((r) => r.json()),
+    loadJSON('summary.json'),
+    loadJSON('gu.json'),
+    loadJSON('dong.json'),
+    loadJSON('meta.json'),
   ]);
 
   document.getElementById('header-total').textContent = fmtCount(meta.counts['매매']);
