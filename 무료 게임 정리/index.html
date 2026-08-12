@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무료 게임 정리 — 무료 PC 게임 328종 카탈로그 분석</title>
+<meta name="description" content="FreeToGame이 수집한 무료 PC 게임 328종을 장르·출시연도·게임 나이로 분석하고, 조건별로 직접 탐색합니다.">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/dashboard.css">
+<link rel="stylesheet" href="assets/games.css">
+</head>
+<body>
+
+<!-- S0 헤더 -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <span class="chip label1">FREE-TO-PLAY GAME CATALOG</span>
+    <h1 class="display2">무료 PC 게임 328종,<br>장르는 두 곳에 쏠려 있다</h1>
+    <p class="body1" style="color:var(--color-label-neutral); max-width:66ch;">
+      MMORPG와 Shooter 두 장르가 카탈로그의 3분의 2를 차지합니다.
+      그런데 2014년을 기준으로 그 안에서 1위가 바뀌었고, 목록의 절반 이상은 이미 10년이 넘은 게임입니다.
+      아래에서 그 구조를 확인하고, 328종을 직접 조건별로 찾아볼 수 있습니다.
+    </p>
+    <div class="header-meta label1">
+      <span>게임 <b id="meta-total">—</b></span>
+      <span>출시 범위 <b id="meta-range">—</b></span>
+      <span>출처 <b>FreeToGame</b></span>
+      <span>집계 기준일 <b id="meta-ref">—</b></span>
+      <span class="header-link">
+        <a href="../부동산-실습/index.html">← 서울 아파트 대시보드</a>
+        &nbsp;·&nbsp;
+        <a href="../index.html">실습 목록</a>
+      </span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- S1 KPI -->
+  <section aria-labelledby="s1-title">
+    <h2 id="s1-title" class="sr-only">카탈로그 요약 지표</h2>
+    <div class="kpi-grid kpi-5" id="kpi-grid">
+      <p class="state-msg">불러오는 중…</p>
+    </div>
+  </section>
+
+  <!-- S2 장르 편중 -->
+  <section class="card" aria-labelledby="s2-title">
+    <div class="section-head">
+      <span class="eyebrow label1">헤드라인</span>
+      <h2 id="s2-title" class="title2">장르 편중 — 두 장르가 3분의 2</h2>
+      <p class="desc body1">정제한 12개 장르의 게임 수입니다. 상위 두 장르만 진한 색으로 표시했습니다.</p>
+    </div>
+    <div class="chart-wrap" id="chart-genre"><p class="state-msg">불러오는 중…</p></div>
+    <p class="chart-caption caption1" id="caption-genre"></p>
+  </section>
+
+  <!-- S3 연도별 출시 추이 -->
+  <section class="card" aria-labelledby="s3-title">
+    <div class="section-head">
+      <span class="eyebrow label1">시계열</span>
+      <h2 id="s3-title" class="title2">출시는 2014~2017년에 몰렸다</h2>
+      <p class="desc body1">연도별 출시 게임 수와 3년 이동평균입니다. 막대에 마우스를 올리면 값이 표시됩니다.</p>
+    </div>
+    <div class="chart-legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--blue-50)"></span>연도별 출시 수</span>
+      <span class="legend-item"><span class="legend-line" style="background:var(--neutral-40)"></span>3년 이동평균</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--blue-95)"></span>2014~2017 집중 구간</span>
+    </div>
+    <div class="chart-wrap" id="chart-years"><p class="state-msg">불러오는 중…</p></div>
+    <p class="chart-caption caption1" id="caption-years"></p>
+  </section>
+
+  <!-- S4 히트맵 -->
+  <section class="card" aria-labelledby="s4-title">
+    <div class="section-head">
+      <span class="eyebrow label1">시대별 구조</span>
+      <h2 id="s4-title" class="title2">쏠림은 유지되고, 주인공만 바뀌었다</h2>
+      <p class="desc body1">
+        가로는 출시 시기 구간, 세로는 장르입니다. 칸 안의 숫자는 게임 수이고,
+        색은 <b>그 장르가 어느 시기에 집중됐는지</b>(행 안에서의 비중)를 나타냅니다.
+      </p>
+    </div>
+    <div class="heatmap-scroll" id="heatmap"><p class="state-msg">불러오는 중…</p></div>
+    <div class="hm-scale">
+      <span>행 안에서 낮음</span>
+      <span class="hm-scale-bar" role="img" aria-label="색이 진할수록 해당 장르가 그 시기에 집중됐음을 뜻합니다"></span>
+      <span>높음</span>
+    </div>
+    <p class="chart-caption caption1" id="caption-heatmap"></p>
+  </section>
+
+  <!-- S5 게임 나이 -->
+  <section class="card" aria-labelledby="s5-title">
+    <div class="section-head">
+      <span class="eyebrow label1">노후도</span>
+      <h2 id="s5-title" class="title2">무료 게임 생태계는 생각보다 늙어 있다</h2>
+      <p class="desc body1">2026년 8월 12일 기준으로 각 게임이 출시된 지 몇 년이 지났는지를 2년 단위로 묶었습니다.</p>
+    </div>
+    <div class="chart-wrap" id="chart-ages"><p class="state-msg">불러오는 중…</p></div>
+    <p class="chart-caption caption1" id="caption-ages"></p>
+  </section>
+
+  <!-- S6 탐색기 -->
+  <section class="card" aria-labelledby="s6-title">
+    <div class="section-head">
+      <span class="eyebrow label1">탐색기</span>
+      <h2 id="s6-title" class="title2">328종 직접 찾아보기</h2>
+      <p class="desc body1">검색어와 조건으로 걸러 보세요. 카드를 누르면 FreeToGame 원본 페이지로 이동합니다.</p>
+    </div>
+
+    <div class="filter-row explorer-filters">
+      <div class="filter-field">
+        <label for="f-search">검색 (제목·퍼블리셔·개발사·설명)</label>
+        <input type="search" id="f-search" placeholder="예: shooter, Riot, Blizzard" autocomplete="off">
+      </div>
+      <div class="filter-field">
+        <label for="f-genre">장르</label>
+        <select id="f-genre"><option value="">전체</option></select>
+      </div>
+      <div class="filter-field">
+        <label for="f-year">출시 시기</label>
+        <select id="f-year">
+          <option value="">전체</option>
+          <option value="2020-2024">2020~2024</option>
+          <option value="2015-2019">2015~2019</option>
+          <option value="2010-2014">2010~2014</option>
+          <option value="2005-2009">2005~2009</option>
+          <option value="0-2004">2004년 이전</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="f-platform">플랫폼</label>
+        <select id="f-platform">
+          <option value="">전체</option>
+          <option value="windows">Windows 전용</option>
+          <option value="windows+browser">브라우저 동시 지원</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="f-sort">정렬</label>
+        <select id="f-sort">
+          <option value="new">최신 출시순</option>
+          <option value="old">오래된 출시순</option>
+          <option value="title">제목 A→Z</option>
+          <option value="genre">장르순</option>
+        </select>
+      </div>
+      <button type="button" class="btn-reset" id="f-reset">초기화</button>
+    </div>
+
+    <p class="result-line body1" id="result-line" role="status" aria-live="polite"></p>
+    <ul class="game-grid" id="game-grid"></ul>
+    <div class="load-more-wrap" id="load-more-wrap" hidden>
+      <button type="button" class="btn-more" id="btn-more">더 보기</button>
+    </div>
+  </section>
+
+  <!-- S7 데이터 한계 -->
+  <section class="card" aria-labelledby="s7-title">
+    <div class="section-head">
+      <span class="eyebrow label1">읽기 전 확인</span>
+      <h2 id="s7-title" class="title2">이 페이지 숫자의 한계</h2>
+    </div>
+    <ol class="limits">
+      <li>FreeToGame이 공개한 무료 PC 게임 목록의 <b>스냅샷(2024년 7월 기준)</b>입니다. 이후 출시된 게임은 없고, 이미 서비스가 끝난 게임이 목록에 남아 있을 수 있습니다.</li>
+      <li><b>평점·플레이어 수·매출 항목이 없습니다.</b> 이 페이지의 모든 숫자는 '출시된 게임의 개수'이며, 인기나 시장 규모가 아닙니다.</li>
+      <li>장르는 원본 18종을 12종으로 정리했습니다. <code>Card→Card Game</code>, <code>ARPG→Action RPG</code>, <code>MMOARPG→MMORPG</code>, <code>Action Game→Action</code>으로 합친 뒤, 게임이 3종 미만인 <code>Action RPG</code>·<code>Action</code>·<code>Fantasy</code>(합쳐서 5종)를 <b>기타</b>로 묶었습니다. <code>MMO</code>(6종)는 원본이 <code>MMORPG</code>와 구분해 표기한 별개 값이라 합치지 않았습니다.</li>
+      <li><b>2024년은 미완결</b>입니다(원본이 2024년 6월 22일까지). 2024년 막대를 다른 해와 그대로 비교하면 안 됩니다.</li>
+      <li>플랫폼은 PC 기준입니다. 모바일·콘솔 버전이 있어도 원본에 표기되지 않아 집계에서 빠집니다.</li>
+      <li>게임 나이는 <b>2026년 8월 12일 고정 기준일</b>로 계산했습니다. 나중에 열어도 값은 바뀌지 않습니다.</li>
+      <li>썸네일은 freetogame.com 원본 주소에 직접 연결합니다. 원본이 내려가면 이미지가 표시되지 않습니다.</li>
+      <li>퍼블리셔·개발사 이름은 원본 문자열 그대로여서, 표기가 조금 다른 같은 회사가 따로 세어질 수 있습니다(예: <code>Sega</code>와 <code>SEGA</code>).</li>
+      <li id="limit-extra"></li>
+    </ol>
+    <footer class="site-footer">
+      데이터 <a href="free-to-play-games.csv">free-to-play-games.csv</a> ·
+      기획서 <a href="PRD.md">PRD.md</a> ·
+      <a href="../index.html">실습 목록</a> ·
+      <a href="../about.html">자기소개</a>
+    </footer>
+  </section>
+
+</main>
+
+<div id="viz-tooltip" role="tooltip" aria-hidden="true"></div>
+<script type="module" src="assets/games.js"></script>
+</body>
+</html>
