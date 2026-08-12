@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>준영 소개</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  /*
+    Wanted "Montage" 디자인 시스템(https://github.com/wanteddev/montage-web)의
+    실제 토큰 값을 그대로 가져와 CSS 변수로 옮긴 것입니다.
+  */
+  :root {
+    /* atomic/blue.ts */
+    --blue-30: #003E9C;
+    --blue-40: #0054D1;
+    --blue-50: #0066FF;
+    --blue-90: #C9DEFE;
+    --blue-95: #EAF2FE;
+
+    /* atomic/neutral.ts */
+    --neutral-10: #171717;
+    --neutral-30: #474747;
+    --neutral-40: #5C5C5C;
+    --neutral-60: #8A8A8A;
+    --neutral-90: #C4C4C4;
+    --neutral-95: #DCDCDC;
+    --neutral-99: #F7F7F7;
+
+    /* semantic 매핑 */
+    --color-primary-normal: var(--blue-50);
+    --color-primary-strong: var(--blue-40);
+    --color-primary-heavy: var(--blue-30);
+    --color-label-normal: var(--neutral-10);
+    --color-label-neutral: var(--neutral-40);
+    --color-label-assistive: var(--neutral-60);
+    --color-bg-normal: #FFFFFF;
+    --color-bg-alternative: var(--neutral-99);
+    --color-fill-normal: var(--neutral-99);
+    --color-line-normal: var(--neutral-95);
+
+    /* spacing/index.ts */
+    --sp-4: 4px;  --sp-8: 8px;   --sp-12: 12px; --sp-16: 16px;
+    --sp-20: 20px; --sp-24: 24px; --sp-32: 32px; --sp-40: 40px;
+    --sp-48: 48px; --sp-64: 64px; --sp-80: 80px;
+
+    /* button/style.ts */
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+    background: var(--color-bg-alternative);
+    color: var(--color-label-normal);
+    margin: 0;
+    padding: var(--sp-64) var(--sp-16) var(--sp-80);
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-40);
+  }
+
+  /* typography/style.ts variant 축약 */
+  .display2 { font-size: 2.5rem; line-height: 3.25rem; font-weight: 700; letter-spacing: -0.0282em; }
+  .title2   { font-size: 1.75rem; line-height: 2.375rem; font-weight: 700; letter-spacing: -0.0236em; }
+  .heading1 { font-size: 1.375rem; line-height: 1.875rem; font-weight: 600; letter-spacing: -0.0194em; }
+  .body1    { font-size: 1rem; line-height: 1.5rem; font-weight: 400; letter-spacing: 0.0057em; }
+  .label1   { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; letter-spacing: 0.0145em; }
+  .caption1 { font-size: 0.75rem; line-height: 1rem; font-weight: 400; letter-spacing: 0.0252em; color: var(--color-label-assistive); }
+
+  h1, h2, p { margin: 0; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: var(--sp-4) var(--sp-12);
+    border-radius: 999px;
+    background: var(--blue-95);
+    color: var(--color-primary-strong);
+    margin-bottom: var(--sp-12);
+  }
+
+  .card {
+    background: var(--color-bg-normal);
+    border: 1px solid var(--color-line-normal);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-32);
+    box-shadow: 0 1px 2px rgba(23, 23, 23, 0.04);
+  }
+
+  .card + .card { margin-top: 0; }
+
+  .card .heading1 { margin-bottom: var(--sp-16); }
+  .card > .body1 { color: var(--color-label-neutral); margin-bottom: var(--sp-24); }
+
+  .stat-row {
+    display: flex;
+    gap: var(--sp-12);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-24);
+  }
+
+  .stat {
+    flex: 1 1 140px;
+    background: var(--color-fill-normal);
+    border-radius: var(--radius-md);
+    padding: var(--sp-16);
+  }
+
+  .stat .caption1 { display: block; margin-bottom: var(--sp-4); }
+  .stat .value { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.012em; color: var(--color-primary-normal); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    text-align: left;
+    padding: var(--sp-12) var(--sp-16);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  thead th {
+    color: var(--color-label-assistive);
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-line-normal);
+  }
+
+  tbody td {
+    border-bottom: 1px solid var(--color-line-normal);
+    color: var(--color-label-normal);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover { background: var(--color-fill-normal); }
+
+  .badge {
+    display: inline-flex;
+    padding: var(--sp-4) var(--sp-8);
+    border-radius: var(--radius-sm);
+    background: var(--blue-95);
+    color: var(--color-primary-strong);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="chip label1">Profile</span>
+      <h1 class="display2">준영</h1>
+      <p class="body1" style="margin-top: var(--sp-16); color: var(--color-label-neutral);">
+        안녕하세요, 저는 준영입니다.
+        새로운 것을 배우고 만드는 것을 좋아하며, 꾸준히 성장하기 위해 노력하고 있습니다.
+        이 페이지는 저를 간단히 소개하기 위해 만들었습니다.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2 class="heading1">자기소개</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>좋아하는 것</td>
+            <td>새로운 기술을 배우고 직접 만들어보는 것</td>
+          </tr>
+          <tr>
+            <td>요즘 배우는 것</td>
+            <td>웹 개발과 프로그래밍 기초</td>
+          </tr>
+          <tr>
+            <td>오늘 목표</td>
+            <td>배운 내용을 정리하고 작은 결과물로 만들어보기</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <span class="badge">REAL ESTATE</span>
+      <h2 class="heading1" style="margin-top: var(--sp-12);">마포구 연남동 아파트 실거래 살펴보기</h2>
+      <p class="body1">
+        2025년 하반기~2026년 상반기 서울 아파트 실거래 데이터를 분석한 결과,
+        마포구 연남동에서는 총 32건의 매매가 이루어졌고 평균 거래가는 약 9억 9,942만 원이었습니다.
+        단지별 최고가 기준 상위 5곳은 코오롱, 대명, 노블레스빌2, 서암, 홍익하이빌 순이었으며,
+        코오롱아파트가 2026년 6월 22일 85.1㎡ 기준 14억 4,000만 원으로 가장 높은 금액에 거래되었습니다.
+      </p>
+
+      <div class="stat-row">
+        <div class="stat">
+          <span class="caption1">총 매매 건수</span>
+          <span class="value">32건</span>
+        </div>
+        <div class="stat">
+          <span class="caption1">평균 거래가</span>
+          <span class="value">9억 9,942만</span>
+        </div>
+        <div class="stat">
+          <span class="caption1">최고 거래가</span>
+          <span class="value">14억 4,000만</span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>단지명</th>
+            <th>거래금액(만원)</th>
+            <th>계약일</th>
+            <th>면적(㎡)</th>
+            <th>층</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>코오롱</td>
+            <td>144,000</td>
+            <td>2026-06-22</td>
+            <td>85.1</td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <td>대명</td>
+            <td>110,000</td>
+            <td>2026-06-18</td>
+            <td>85.1</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>노블레스빌2</td>
+            <td>72,500</td>
+            <td>2026-03-25</td>
+            <td>82.3</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>서암</td>
+            <td>71,000</td>
+            <td>2026-06-25</td>
+            <td>67.2</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>홍익하이빌</td>
+            <td>56,500</td>
+            <td>2026-05-25</td>
+            <td>71.1</td>
+            <td>5</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

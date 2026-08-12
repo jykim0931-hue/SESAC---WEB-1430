@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이 웹사이트는 어떻게 만들어졌나</title>
+<meta name="description" content="서울 아파트 대시보드가 어떤 자료로, 어떤 순서를 거쳐 화면이 되는지 그림으로 설명한 문서">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@400;600&display=swap">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  /* ─────────────────────────────────────────────────────────
+     diagram-design (cathrynlavery) 스타일 규격 + 이 사이트 브랜드 스킨
+     accent 를 브랜드 블루(#0066FF)로 교체.
+     1-accent 원칙에 따라 기본 스킨의 link-blue 역할은 사용하지 않음.
+     ───────────────────────────────────────────────────────── */
+  :root {
+    --paper:#f7f7f7;
+    --paper-2:#ececec;
+    --ink:#171717;
+    --muted:#5c5c5c;
+    --soft:#8a8a8a;
+    --rule:rgba(23,23,23,0.12);
+    --rule-solid:#dcdcdc;
+    --accent:#0066ff;
+    --accent-tint:rgba(0,102,255,0.08);
+
+    --f-title:'Instrument Serif','Noto Serif KR',Georgia,serif;
+    --f-sans:'Geist','Pretendard Variable',Pretendard,-apple-system,sans-serif;
+    --f-mono:'Geist Mono','Pretendard Variable',ui-monospace,monospace;
+  }
+
+  * { box-sizing:border-box; }
+
+  body {
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--f-sans);
+    font-size:16px;
+    line-height:1.7;
+    padding:64px 24px 40px;
+  }
+  .wrap { max-width:1000px; margin:0 auto; }
+
+  .eyebrow {
+    font-family:var(--f-mono);
+    font-size:8px;
+    font-weight:500;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--soft);
+    margin:0 0 12px;
+  }
+  h1 {
+    font-family:var(--f-title);
+    font-size:44px;
+    font-weight:400;
+    line-height:1.2;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+  .subtitle {
+    color:var(--muted);
+    max-width:64ch;
+    margin:0;
+  }
+
+  h2 {
+    font-family:var(--f-title);
+    font-size:28px;
+    font-weight:400;
+    line-height:1.3;
+    margin:0 0 8px;
+  }
+  h3 {
+    font-family:var(--f-sans);
+    font-size:16px;
+    font-weight:600;
+    margin:0;
+  }
+  p { margin:0 0 16px; }
+  p:last-child { margin-bottom:0; }
+
+  section { margin-top:72px; }
+  .sec-intro { color:var(--muted); max-width:64ch; margin:0 0 32px; }
+
+  figure { margin:0 0 24px; }
+  .fig-scroll { overflow-x:auto; }
+  figure svg { display:block; width:100%; min-width:720px; height:auto; }
+  figcaption {
+    font-family:var(--f-sans);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+    margin-top:16px;
+    max-width:72ch;
+  }
+  figcaption b { color:var(--ink); font-weight:600; }
+
+  /* 요약 카드 — 폭을 일부러 다르게 (1.1fr 1fr 0.9fr) */
+  .cards {
+    display:grid;
+    grid-template-columns:1.1fr 1fr 0.9fr;
+    gap:16px;
+    margin-top:32px;
+  }
+  .card {
+    background:#ffffff;
+    border:1px solid var(--rule);
+    border-radius:6px;
+    padding:20px;
+  }
+  .card .eyebrow { margin-bottom:8px; }
+  .card-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  .card-dot { width:7px; height:7px; border-radius:50%; flex:none; }
+  .dot-accent { background:var(--accent); }
+  .dot-ink { background:var(--ink); }
+  .dot-muted { background:var(--muted); }
+  .card p { font-size:14px; color:var(--muted); margin:0; }
+
+  .callout {
+    font-family:var(--f-title);
+    font-style:italic;
+    font-size:20px;
+    line-height:1.5;
+    color:var(--ink);
+    border-left:2px solid var(--accent);
+    padding-left:20px;
+    margin:32px 0;
+    max-width:60ch;
+  }
+
+  .table-scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th, td { text-align:left; padding:12px 16px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  thead th {
+    font-family:var(--f-mono);
+    font-size:8px;
+    font-weight:500;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--soft);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td { border-bottom:none; }
+  td.step {
+    font-family:var(--f-mono);
+    font-size:12px;
+    color:var(--soft);
+    white-space:nowrap;
+  }
+  td b { font-weight:600; }
+  td .sub { display:block; color:var(--muted); font-size:13px; }
+
+  .issue {
+    background:#ffffff;
+    border:1px solid var(--rule);
+    border-left:2px solid var(--accent);
+    border-radius:6px;
+    padding:24px;
+  }
+  .issue h3 { margin-bottom:12px; }
+  .issue p { font-size:15px; color:var(--muted); }
+  .issue p b { color:var(--ink); font-weight:600; }
+
+  .num {
+    font-family:var(--f-mono);
+    font-size:13px;
+    color:var(--ink);
+  }
+
+  footer {
+    margin-top:80px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    font-family:var(--f-mono);
+    font-size:8px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--soft);
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+
+  @media (max-width:760px) {
+    body { padding:40px 16px 32px; }
+    h1 { font-size:32px; }
+    h2 { font-size:24px; }
+    .cards { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">How it works</p>
+    <h1>이 웹사이트는 어떻게 만들어졌나</h1>
+    <p class="subtitle">
+      서울 아파트 대시보드가 어떤 자료를 받아, 어떤 순서를 거쳐 화면이 되는지 정리했습니다.
+      프로그래밍을 몰라도 읽을 수 있도록 그림 위주로 설명합니다.
+    </p>
+  </header>
+
+  <!-- ── 1. 데이터 흐름 ── -->
+  <section>
+    <p class="eyebrow">01 — Data flow</p>
+    <h2>자료가 화면이 되기까지</h2>
+    <p class="sec-intro">
+      가장 먼저 알아야 할 것은, <b>원본 자료가 방문자에게 그대로 전달되지 않는다</b>는 점입니다.
+      원본은 32만 건짜리 큰 파일이라 그대로 보내면 사이트가 매우 느려집니다.
+      그래서 <b>미리 계산해 요약해 둔 뒤</b>, 방문자에게는 그 요약본만 보냅니다.
+    </p>
+
+    <figure>
+      <div class="fig-scroll">
+      <svg viewBox="0 0 880 360" role="img" aria-labelledby="flow-title flow-desc">
+        <title id="flow-title">자료가 화면이 되기까지의 흐름</title>
+        <desc id="flow-desc">원본 거래 기록은 미리 실행되는 계산 프로그램을 거쳐 작은 요약 파일이 되고, 웹사이트는 그 요약 파일만 내려받는다. 원본이 방문자에게 직접 전달되는 경로는 존재하지 않는다.</desc>
+        <defs>
+          <marker id="fl-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#5c5c5c"/>
+          </marker>
+          <marker id="fl-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0066ff"/>
+          </marker>
+          <marker id="fl-arrow-off" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#8a8a8a"/>
+          </marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+        <!-- zone : 미리 계산해두는 단계 -->
+        <rect x="16" y="56" width="648" height="152" rx="8"
+              fill="rgba(23,23,23,0.02)" stroke="rgba(23,23,23,0.10)" stroke-width="0.8"/>
+        <rect x="32" y="60" width="176" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="120" y="69" fill="rgba(23,23,23,0.40)" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.14em">방문 전에 미리 끝내둠</text>
+
+        <!-- arrows first (z-order) -->
+        <line x1="184" y1="136" x2="256" y2="136" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#fl-arrow)"/>
+        <line x1="416" y1="136" x2="488" y2="136" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#fl-arrow)"/>
+        <line x1="648" y1="136" x2="720" y2="136" stroke="#0066ff" stroke-width="1.2" marker-end="url(#fl-arrow-accent)"/>
+
+        <!-- 일어나지 않는 경로 -->
+        <path d="M 108,184 V 248 Q 108,256 116,256 H 780 Q 788,256 788,248 V 192"
+              fill="none" stroke="#8a8a8a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#fl-arrow-off)"/>
+        <line x1="436" y1="248" x2="452" y2="264" stroke="#8a8a8a" stroke-width="1.2"/>
+        <line x1="452" y1="248" x2="436" y2="264" stroke="#8a8a8a" stroke-width="1.2"/>
+        <rect x="368" y="276" width="152" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="444" y="285" fill="#8a8a8a" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">이 경로는 없습니다</text>
+
+        <!-- arrow labels -->
+        <rect x="204" y="116" width="32" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="220" y="125" fill="#8a8a8a" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">읽기</text>
+        <rect x="428" y="116" width="48" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="452" y="125" fill="#8a8a8a" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">요약 저장</text>
+        <rect x="660" y="116" width="48" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="684" y="125" fill="#0066ff" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">내려받기</text>
+
+        <!-- N1 원본 -->
+        <rect x="32" y="88" width="152" height="96" rx="6" fill="#f7f7f7"/>
+        <rect x="32" y="88" width="152" height="96" rx="6" fill="rgba(23,23,23,0.05)" stroke="#5c5c5c" stroke-width="1"/>
+        <rect x="44" y="100" width="36" height="12" rx="2" fill="transparent" stroke="rgba(92,92,92,0.40)" stroke-width="0.8"/>
+        <text x="62" y="109" fill="rgba(92,92,92,0.90)" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.08em">원본</text>
+        <text x="108" y="140" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">부동산 거래 기록</text>
+        <text x="108" y="160" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">32만 건 · 27.5MB</text>
+
+        <!-- N2 계산 -->
+        <rect x="264" y="88" width="152" height="96" rx="6" fill="#f7f7f7"/>
+        <rect x="264" y="88" width="152" height="96" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <rect x="276" y="100" width="36" height="12" rx="2" fill="transparent" stroke="rgba(23,23,23,0.40)" stroke-width="0.8"/>
+        <text x="294" y="109" fill="rgba(23,23,23,0.80)" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.08em">계산</text>
+        <text x="340" y="140" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">요약 계산 프로그램</text>
+        <text x="340" y="160" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">자료가 바뀔 때만 실행</text>
+
+        <!-- N3 요약 파일 (FOCAL) -->
+        <rect x="496" y="88" width="152" height="96" rx="6" fill="#f7f7f7"/>
+        <rect x="496" y="88" width="152" height="96" rx="6" fill="rgba(0,102,255,0.08)" stroke="#0066ff" stroke-width="1"/>
+        <rect x="508" y="100" width="36" height="12" rx="2" fill="transparent" stroke="rgba(0,102,255,0.40)" stroke-width="0.8"/>
+        <text x="526" y="109" fill="#0066ff" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.08em">요약</text>
+        <text x="572" y="140" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">요약 파일</text>
+        <text x="572" y="160" fill="#0066ff" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">227KB · 120배 작음</text>
+
+        <!-- N4 웹사이트 -->
+        <rect x="728" y="88" width="120" height="96" rx="6" fill="#f7f7f7"/>
+        <rect x="728" y="88" width="120" height="96" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <rect x="740" y="100" width="36" height="12" rx="2" fill="transparent" stroke="rgba(23,23,23,0.40)" stroke-width="0.8"/>
+        <text x="758" y="109" fill="rgba(23,23,23,0.80)" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.08em">화면</text>
+        <text x="788" y="140" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">웹사이트</text>
+        <text x="788" y="160" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">방문자가 보는 것</text>
+
+        <!-- legend -->
+        <line x1="32" y1="312" x2="848" y2="312" stroke="rgba(23,23,23,0.10)" stroke-width="0.8"/>
+        <text x="32" y="330" fill="#5c5c5c" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              letter-spacing="0.14em">LEGEND</text>
+        <line x1="112" y1="326" x2="140" y2="326" stroke="#5c5c5c" stroke-width="1.2"/>
+        <text x="148" y="330" fill="#5c5c5c" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace">실제 흐름</text>
+        <line x1="232" y1="326" x2="260" y2="326" stroke="#0066ff" stroke-width="1.2"/>
+        <text x="268" y="330" fill="#5c5c5c" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace">방문자에게 가는 부분</text>
+        <line x1="424" y1="326" x2="452" y2="326" stroke="#8a8a8a" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="460" y="330" fill="#5c5c5c" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace">일어나지 않는 경로</text>
+      </svg>
+      </div>
+      <figcaption>
+        회색 점선은 <b>일어나지 않는 일</b>입니다. 만약 이 경로가 있었다면 방문자는 사이트를 열 때마다
+        27.5MB를 받아야 합니다. 미리 요약해 두기 때문에 실제로는 그 <b>120분의 1</b>만 받습니다.
+      </figcaption>
+    </figure>
+
+    <div class="cards">
+      <div class="card">
+        <p class="eyebrow">원본</p>
+        <div class="card-header"><span class="card-dot dot-muted"></span><h3>27.5 MB</h3></div>
+        <p>2025년 7월부터 2026년 6월까지 서울에서 신고된 거래 32만 건</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">방문자가 받는 양</p>
+        <div class="card-header"><span class="card-dot dot-accent"></span><h3>227 KB</h3></div>
+        <p>사진 한 장보다 가벼운 크기. 그래서 화면이 바로 뜹니다</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">다루는 범위</p>
+        <div class="card-header"><span class="card-dot dot-ink"></span><h3>25구 · 316동</h3></div>
+        <p>아파트 매매만 사용. 전세는 한 곳에서만, 월세는 쓰지 않음</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. 빈 칸 ── -->
+  <section>
+    <p class="eyebrow">02 — Why blanks exist</p>
+    <h2>표에 <span style="font-family:var(--f-mono);font-size:24px">—</span> 가 보이는 이유</h2>
+    <p class="sec-intro">
+      화면의 표를 보다 보면 숫자 대신 <b>—</b> 가 있는 칸이 있습니다.
+      고장이 아니라, <b>말할 근거가 부족해서 일부러 비워둔</b> 자리입니다.
+      거래가 두세 건뿐인 동네의 평균은 우연에 크게 흔들려서, 숫자로 적으면 오히려 잘못된 인상을 줍니다.
+    </p>
+
+    <figure>
+      <div class="fig-scroll">
+      <svg viewBox="0 0 880 560" role="img" aria-labelledby="gate-title gate-desc">
+        <title id="gate-title">거래가 부족한 동네를 빈칸으로 두는 과정</title>
+        <desc id="gate-desc">전체 거래 기록에서 아파트 매매만 골라 동네 단위로 묶은 뒤, 거래 건수가 기준을 넘는 211개 동네만 숫자를 보여주고 나머지 105개 동네는 빈칸으로 남긴다.</desc>
+        <defs>
+          <marker id="gt-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#5c5c5c"/>
+          </marker>
+          <marker id="gt-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0066ff"/>
+          </marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+        <!-- arrows first -->
+        <line x1="440" y1="112" x2="440" y2="140" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#gt-arrow)"/>
+        <line x1="440" y1="200" x2="440" y2="228" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#gt-arrow)"/>
+        <line x1="440" y1="288" x2="440" y2="316" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#gt-arrow)"/>
+
+        <!-- branch : fan attach points 400 / 480 -->
+        <path d="M 400,384 V 416 Q 400,424 392,424 H 240 Q 232,424 232,432 V 452"
+              fill="none" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#gt-arrow)"/>
+        <path d="M 480,384 V 416 Q 480,424 488,424 H 640 Q 648,424 648,432 V 452"
+              fill="none" stroke="#0066ff" stroke-width="1.2" marker-end="url(#gt-arrow-accent)"/>
+
+        <!-- branch labels : 6px gap above the horizontal segment at y=424 -->
+        <rect x="288" y="404" width="48" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="312" y="413" fill="#8a8a8a" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">기준 넘음</text>
+        <rect x="540" y="404" width="48" height="12" rx="2" fill="#f7f7f7"/>
+        <text x="564" y="413" fill="#0066ff" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.06em">기준 미달</text>
+
+        <!-- N1 -->
+        <rect x="320" y="56" width="240" height="56" rx="6" fill="#f7f7f7"/>
+        <rect x="320" y="56" width="240" height="56" rx="6" fill="rgba(23,23,23,0.05)" stroke="#5c5c5c" stroke-width="1"/>
+        <text x="440" y="82" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">신고된 거래 전체</text>
+        <text x="440" y="100" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">32만 건</text>
+
+        <!-- N2 -->
+        <rect x="320" y="144" width="240" height="56" rx="6" fill="#f7f7f7"/>
+        <rect x="320" y="144" width="240" height="56" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <text x="440" y="170" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">아파트 매매만 골라내기</text>
+        <text x="440" y="188" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">7만 2천 건 · 전월세 제외</text>
+
+        <!-- N3 -->
+        <rect x="320" y="232" width="240" height="56" rx="6" fill="#f7f7f7"/>
+        <rect x="320" y="232" width="240" height="56" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <text x="440" y="258" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">동네 단위로 묶기</text>
+        <text x="440" y="276" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">316개 동네</text>
+
+        <!-- N4 기준 -->
+        <rect x="304" y="320" width="272" height="64" rx="6" fill="#f7f7f7"/>
+        <rect x="304" y="320" width="272" height="64" rx="6" fill="rgba(23,23,23,0.03)" stroke="rgba(23,23,23,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="440" y="348" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">거래가 충분한 동네인가?</text>
+        <text x="440" y="368" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">반기마다 최소 건수를 넘어야 함</text>
+
+        <!-- N5 -->
+        <rect x="112" y="456" width="240" height="64" rx="6" fill="#f7f7f7"/>
+        <rect x="112" y="456" width="240" height="64" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <text x="232" y="484" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">숫자를 보여줌</text>
+        <text x="232" y="504" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">211개 동네</text>
+
+        <!-- N6 FOCAL -->
+        <rect x="528" y="456" width="240" height="64" rx="6" fill="#f7f7f7"/>
+        <rect x="528" y="456" width="240" height="64" rx="6" fill="rgba(0,102,255,0.08)" stroke="#0066ff" stroke-width="1"/>
+        <text x="648" y="484" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">— 로 비워둠</text>
+        <text x="648" y="504" fill="#0066ff" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">105개 동네</text>
+      </svg>
+      </div>
+      <figcaption>
+        빈칸은 <b>“모른다”를 정직하게 표시한 것</b>입니다. 0으로 채우면 “거래가 0건”이나 “변동이 없음”과
+        구분되지 않고, 추측한 숫자를 넣으면 읽는 사람이 사실로 받아들입니다.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 3. 전세가율 ── -->
+  <section>
+    <p class="eyebrow">03 — Comparing like with like</p>
+    <h2>전세가율은 왜 까다롭게 계산했나</h2>
+    <p class="sec-intro">
+      전세가율은 <b>매매가 대비 전세보증금의 비율</b>입니다. 이 값이 낮을수록 전세를 끼고 사도
+      직접 넣어야 하는 돈이 큽니다. 간단해 보이지만 <b>무엇과 무엇을 비교하느냐</b>에 따라 답이 완전히 달라집니다.
+    </p>
+
+    <figure>
+      <div class="fig-scroll">
+      <svg viewBox="0 0 880 424" role="img" aria-labelledby="cmp-title cmp-desc">
+        <title id="cmp-title">전세가율을 계산하는 두 가지 방법 비교</title>
+        <desc id="cmp-desc">동네 전체를 한 덩어리로 비교하면 서로 다른 아파트가 섞여 전세가 매매보다 비싼 불가능한 값이 나온다. 같은 아파트, 같은 평수끼리 묶어 계산한 뒤 동네 대표값으로 모으면 정상 범위가 나온다.</desc>
+        <defs>
+          <marker id="cp-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#5c5c5c"/>
+          </marker>
+          <marker id="cp-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0066ff"/>
+          </marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f7f7f7"/>
+
+        <!-- column divider -->
+        <line x1="440" y1="48" x2="440" y2="384" stroke="rgba(23,23,23,0.10)" stroke-width="0.8"/>
+
+        <!-- column headers -->
+        <text x="232" y="36" fill="#8a8a8a" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.18em">틀린 방법</text>
+        <text x="648" y="36" fill="#0066ff" font-size="8" font-family="'Geist Mono','Pretendard Variable',monospace"
+              text-anchor="middle" letter-spacing="0.18em">쓰고 있는 방법</text>
+
+        <!-- arrows first -->
+        <line x1="232" y1="160" x2="232" y2="212" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#cp-arrow)"/>
+        <line x1="648" y1="152" x2="648" y2="180" stroke="#5c5c5c" stroke-width="1.2" marker-end="url(#cp-arrow)"/>
+        <line x1="648" y1="244" x2="648" y2="272" stroke="#0066ff" stroke-width="1.2" marker-end="url(#cp-arrow-accent)"/>
+
+        <!-- LEFT : 틀린 방법 -->
+        <rect x="112" y="64" width="240" height="96" rx="6" fill="#f7f7f7"/>
+        <rect x="112" y="64" width="240" height="96" rx="6" fill="rgba(23,23,23,0.03)" stroke="rgba(23,23,23,0.30)" stroke-width="1"/>
+        <text x="232" y="96" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">동네 전체를 한 덩어리로</text>
+        <text x="232" y="120" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">30년 된 아파트와 신축이</text>
+        <text x="232" y="136" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">한 통계에 섞임</text>
+
+        <rect x="112" y="216" width="240" height="88" rx="6" fill="#f7f7f7"/>
+        <rect x="112" y="216" width="240" height="88" rx="6" fill="rgba(23,23,23,0.03)" stroke="rgba(23,23,23,0.30)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="232" y="256" fill="#5c5c5c" font-size="24" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">119.3%</text>
+        <text x="232" y="280" fill="#8a8a8a" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">전세가 매매보다 비싸다?</text>
+        <line x1="196" y1="324" x2="212" y2="340" stroke="#8a8a8a" stroke-width="1.2"/>
+        <line x1="212" y1="324" x2="196" y2="340" stroke="#8a8a8a" stroke-width="1.2"/>
+        <text x="252" y="336" fill="#8a8a8a" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">있을 수 없는 값</text>
+
+        <!-- RIGHT : 맞는 방법 -->
+        <rect x="528" y="64" width="240" height="88" rx="6" fill="#f7f7f7"/>
+        <rect x="528" y="64" width="240" height="88" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <text x="648" y="96" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">같은 아파트 · 같은 평수끼리</text>
+        <text x="648" y="120" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">매매도 전세도 3건 이상</text>
+        <text x="648" y="136" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">있는 묶음만 사용</text>
+
+        <rect x="528" y="184" width="240" height="60" rx="6" fill="#f7f7f7"/>
+        <rect x="528" y="184" width="240" height="60" rx="6" fill="#ffffff" stroke="#171717" stroke-width="1"/>
+        <text x="648" y="210" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">묶음마다 비율을 냄</text>
+        <text x="648" y="230" fill="#5c5c5c" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">3,993개 묶음</text>
+
+        <rect x="528" y="276" width="240" height="88" rx="6" fill="#f7f7f7"/>
+        <rect x="528" y="276" width="240" height="88" rx="6" fill="rgba(0,102,255,0.08)" stroke="#0066ff" stroke-width="1"/>
+        <text x="648" y="308" fill="#171717" font-size="12" font-weight="600"
+              font-family="'Geist','Pretendard Variable',sans-serif" text-anchor="middle">동네 대표값으로 모음</text>
+        <text x="648" y="332" fill="#0066ff" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">압구정동 16% ~ 가산동 91%</text>
+        <text x="648" y="348" fill="#0066ff" font-size="8"
+              font-family="'Geist Mono','Pretendard Variable',monospace" text-anchor="middle">이상한 값 0건</text>
+      </svg>
+      </div>
+      <figcaption>
+        같은 아파트의 같은 평수끼리만 비교해야 뜻이 통합니다. 동네 전체를 뭉뚱그리면
+        낡은 소형 아파트의 전세금과 신축 대형 아파트의 매매가가 한 계산에 섞여
+        <b>전세가 매매보다 비싼</b> 불가능한 값이 나옵니다.
+      </figcaption>
+    </figure>
+
+    <p class="callout">
+      비싼 동네일수록 전세가율이 낮습니다. 집값이 높은 데다 전세로 메울 수 있는 몫도 작아서,
+      진입장벽이 두 겹으로 걸립니다.
+    </p>
+  </section>
+
+  <!-- ── 4. 화면 구성 ── -->
+  <section>
+    <p class="eyebrow">04 — What's on the page</p>
+    <h2>화면은 무엇에 답하나</h2>
+    <p class="sec-intro">
+      위쪽은 그냥 읽어 내려가는 <b>요약</b>이고, 아래쪽은 직접 눌러보며 찾는 <b>도구</b>입니다.
+    </p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>순서</th><th>화면에 있는 것</th><th>답해주는 질문</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="step">01</td>
+              <td><b>큰 숫자 네 개</b><span class="sub">거래 건수 · 중간 가격 · 평당가 · 변화율</span></td>
+              <td>서울 전체가 지금 어떤 상태인가</td></tr>
+          <tr><td class="step">02</td>
+              <td><b>구별 막대그래프</b><span class="sub">25개 구를 오른 순서로 나열</span></td>
+              <td>어느 구가 오르고 어느 구가 빠졌나</td></tr>
+          <tr><td class="step">03</td>
+              <td><b>월별 그래프</b><span class="sub">막대는 거래량, 선은 가격</span></td>
+              <td>1년 동안 어떻게 움직였나</td></tr>
+          <tr><td class="step">04</td>
+              <td><b>동네 순위 두 줄</b><span class="sub">많이 오른 곳 10 · 많이 빠진 곳 10</span></td>
+              <td>가장 크게 움직인 동네는 어디인가</td></tr>
+          <tr><td class="step">05</td>
+              <td><b>예산 탐색기</b><span class="sub">금액을 정하면 갈 수 있는 동네가 나옴</span></td>
+              <td>내 예산으로 어디를 갈 수 있나</td></tr>
+          <tr><td class="step">06</td>
+              <td><b>구 선택 표</b><span class="sub">관심 구를 고르면 동네별로 펼쳐짐</span></td>
+              <td>그 구 안에서 동네끼리 어떻게 다른가</td></tr>
+          <tr><td class="step">07</td>
+              <td><b>전세가율 점 그래프</b><span class="sub">점 하나가 동네 하나</span></td>
+              <td>실제 진입장벽은 어떻게 작동하나</td></tr>
+          <tr><td class="step">08</td>
+              <td><b>맨 아래 안내</b><span class="sub">이 숫자를 믿을 때 주의할 점</span></td>
+              <td>어디까지 믿어도 되나</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 5. 미해결 ── -->
+  <section>
+    <p class="eyebrow">05 — Known issue</p>
+    <h2>아직 고치지 않은 것</h2>
+    <p class="sec-intro">
+      정직하게 적어둡니다. 화면 맨 위 큰 숫자 하나가 오해를 부르는 상태입니다.
+    </p>
+
+    <div class="issue">
+      <h3>“반기 변화율 −6.5%”는 값은 맞지만 뜻이 오해됩니다</h3>
+      <p>
+        서울 전체를 한 줄로 세웠을 때 가운데 값은 <b>6.5% 내려갔습니다</b>.
+        그런데 바로 아래 그래프를 보면 <b>25개 구 중 18개 구가 올랐고</b>, 서초구는 21%나 올랐습니다.
+        읽는 사람은 둘 중 하나가 틀렸다고 생각하게 됩니다.
+      </p>
+      <p>
+        둘 다 맞습니다. 내려간 것은 <b>가격이 아니라 거래의 구성</b>입니다.
+        올해 들어 값싼 동네의 거래가 크게 늘었습니다 — 노원구는 전체 거래에서 차지하는 비중이
+        <span class="num">7.8% → 11.8%</span>로 늘었고, 값비싼 성동구는 <span class="num">4.5% → 2.3%</span>로 줄었습니다.
+        싼 동네가 많이 거래되면, 각 동네 가격이 올라도 전체를 한 줄로 세운 가운데 값은 내려갑니다.
+      </p>
+      <p>
+        거래량을 감안해 다시 계산하면 <b>구 평균은 +5.0%</b>입니다.
+        <b>고칠 방향:</b> 큰 숫자를 +5.0%로 바꾸고, −6.5%는 “거래 구성이 바뀐 결과”라는 설명과 함께 작게 붙입니다.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <span>서울 아파트 매매 시장 대시보드</span>
+    <span>자료 2025.07 – 2026.06</span>
+    <span>도식 diagram-design</span>
+  </footer>
+
+</div>
+</body>
+</html>
